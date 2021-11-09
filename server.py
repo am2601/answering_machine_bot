@@ -5,10 +5,11 @@ app = Flask(__name__)
 previous_text = ''
 current_text = ''
 answer = ''
+received_messages = []
 
 @app.route("/", methods=['POST', 'GET'])
 def hi():
-    return "hi, im alive"
+    return received_messages
 
 @app.route("/post_aswer", methods=['POST']) # google colab post answer -- 3
 def get_answer():
@@ -16,7 +17,7 @@ def get_answer():
     imd = request.args
     imd.to_dict(flat=True)
     answer = imd["answer"]
-    print(f'/post_aswer: {answer}')
+    # print(f'/post_aswer: {answer}')
     return 'ok'
 
 @app.route("/get_user_text", methods=['GET']) # google colab get users text -- 2
@@ -25,7 +26,7 @@ def get():
     global previous_text
     if current_text != previous_text:
         previous_text = current_text[:]
-        print(f'/get_user_text: {current_text}')
+        # print(f'/get_user_text: {current_text}')
         return current_text
     return 'NOTEXT'
 
@@ -35,7 +36,8 @@ def post_text():
     imd = request.args
     imd.to_dict(flat=True)
     current_text = imd["text"]
-    print(f'/post_user_text: {current_text}')
+    # print(f'/post_user_text: {current_text}')
+    received_messages.append(current_text)
     return current_text
 
 @app.route("/get_answer", methods=['GET']) # java app get answer from server -- 4
